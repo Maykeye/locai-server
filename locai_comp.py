@@ -6,7 +6,8 @@ from dataclasses import dataclass
 from chatwrap import ChatWrapExl2, codegen_prompt
 import torch
 import gc
-
+import traceback
+import sys
 @dataclass
 class RequestInit:
     code: str
@@ -62,8 +63,11 @@ def simple_gen():
                 result = result[:delete_from]
             result = result[init_request.col:]
 
-        except:
+        except Exception as e:
             result = "(INTERNAL ERROR)"
+            traceback.print_exc()
+            print(f"Exception occured during handling of\n{json.dumps(d, indent=2)}", file=sys.stderr)
+
 
     return ({"generation":result})
 

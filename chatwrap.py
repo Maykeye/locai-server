@@ -87,6 +87,8 @@ def codegen_prompt(code:str, line_no:int, col_no:int, _cache = {}, tokenizer=Non
     prompt = _cache['prompt']
     
     lines = code.splitlines()
+    if line_no == len(lines):
+        lines.append("")
     cursor_line = lines[line_no]
     lines[line_no] = lines[line_no][:col_no]
     context_lines = lines[max(0, line_no-N):line_no]    
@@ -103,12 +105,8 @@ def codegen_prompt(code:str, line_no:int, col_no:int, _cache = {}, tokenizer=Non
     return prompt
 
 def test():
-    m = ChatWrapExl2("~/models/bartowski_zephyr-7b-dpo-full-exl2_4_25")
-    t = (codegen_prompt("imp", 0, 3))
-    print(t)
-    print(t, end="|>")
-    t = m.generate(t, return_new_only=True)
-    print(t)
+    src = "import torch\n\n# Create empty 2x2048 \n"
+    print(codegen_prompt(src, 3, 0))
 
 def test1():
     m = ChatWrapExl2("~/models/bartowski_zephyr-7b-dpo-full-exl2_4_25") # This works the best from OSS models(MIT/Apache2) what I've tried 
